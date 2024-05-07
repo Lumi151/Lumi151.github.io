@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página web multimedia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url(Images/fondoP.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            text-shadow: 2px 2px 5px white;
+        }
+        header {
+            padding: 10px 0;
+            text-align: center;
+        }
+        .aside-slider {
+    overflow-y: auto;
+    max-height: 80vh; /* Altura máxima */
+}
+
+.aside-slider::-webkit-scrollbar {
+    width: 5px; /* Ancho de la barra de desplazamiento */
+}
+
+.aside-slider::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3); /* Color de la barra de desplazamiento */
+    border-radius: 5px; /* Radio de los bordes */
+}
+
+.aside-slider::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1); /* Color de fondo de la barra de desplazamiento */
+}
+
+        .circular-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 24px;
+            border: none;
+            cursor: pointer;
+            z-index: 1001; /* Asegura que esté encima del contenido */
+        }
+        #closeAsideButton {
+    display: block;
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#closeAsideButton:hover {
+    background-color: #0056b3;
+}
+
+        /* Estilos para el aside */
+        #comentariosAside {
+            /* Estilos existentes del aside */
+        }
+
+        #closeAside {
+            /* Estilos para el botón de cerrar */
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ff0000;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            text-shadow: 2px 2px 5px black;
+        }
+        section {
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 100px; /* Margen inferior para evitar solapamiento con el pie de página. */
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 2;
+            text-shadow: 2px 2px 5px black;
+        }
+        .meta, .faq {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            border: 2px solid #333; /* Borde sólido */
+            border-radius: 10px; /* Bordes redondeados */
+            padding: 20px; /* Espaciado interno */
+            background-color: #fff; /* Fondo blanco */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra suave */
+        }
+        .meta h3, .faq h3 {
+            color: #444;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .monto, .faq div {
+            width: 80px;
+            height: 80px;
+            background-color: #f0f0f0;
+            text-align: center;
+            line-height: 80px;
+            border-radius: 50%;
+            border: 2px solid #333;
+        }
+        .faq p, .faq ul {
+            text-align: left;
+            margin-top: 5px;
+        }
+        .faq ul {
+            padding-left: 20px;
+        }
+        .faq li {
+            margin-bottom: 10px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .objective {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+        .objective:hover {
+            background-color: #e0e0e0;
+        }
+         
+        /* Estilos CSS para el aside */
+        aside {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: 250px; /* Ancho ajustado */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            z-index: 1000; /* Para asegurar que esté encima del contenido */
+            opacity: 0; /* Inicialmente transparente */
+            transition: opacity 0.5s; /* Transición suave */
+        }
+
+        /* Estilos CSS para los comentarios */
+        .comment {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .comment img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            float: left;
+        }
+
+        .comment .info {
+            overflow: hidden;
+        }
+
+        .comment .info p {
+            margin: 0;
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Estilos CSS para el formulario de comentarios */
+        .comment-form {
+            display: none; /* Por defecto oculto */
+            margin-top: 10px;
+            opacity: 0; /* Inicialmente transparente */
+            transition: opacity 0.5s ease-in-out; /* Transición suave */
+        }
+
+        .comment-form.active {
+            display: block; /* Mostrar cuando está activo */
+            opacity: 1; /* Hacer visible */
+        }
+
+        .comment-form input[type="text"],
+        .comment-form textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .comment-form button {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .comment-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .objective-content {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease-out;
+            padding: 0 10px;
+            margin-top: 5px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+        }
+        .objective-content p {
+            margin: 0;
+            text-align: center;
+        }
+        .objective-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
+        .custom-form {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease-out;
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+            text-align: center;
+        }
+        .custom-form.active-form {
+            max-height: 1000px; /* Ajusta esta altura máxima según sea necesario. */
+            transition: max-height 0.5s ease-in-out;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: black;
+        }
+        input[type="number"],
+        textarea,
+        button {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Estilos CSS para seccion equipo*/
+        .contenedor {
+          position: relative;
+          display: flex;
+          justify-content: center;
+          gap: 50px;
+          flex-wrap: wrap;
+        }
+
+        .contenedor .cuadro {
+          position: relative;
+        }
+
+        .contenedor .cuadro .cara {
+          width: 400px;
+          height: 400px;
+          transition: 0.4s;
+        }
+
+        .contenedor .cuadro .cara.frente {
+          position: relative;
+          background: #333;
+          display: flex;
+          justify-content: center;
+          align-content: center;
+          align-items: center;
+          z-index: 1;
+          transform: translateY(100px);
+        }
+
+        .contenedor .cuadro:hover .cara.frente {
+          transform: translateY(0);
+          box-shadow: inset 0 0 60px whitesmoke, inset 20px 0 80px #b95e5c, inset -20px 0 80px #1ec8e1, inset 20px 0 300px #b95e5c, inset -20px 0 300px #1ec8e1, 0 0 50px #fff, -10px 0 30px #b95e5c, 10px 0 80px #1ec8e1;
+        }
+
+
+
+        .contenedor .cuadro .cara.frente .contenido {
+          width: 100%;
+          height: 100%;
+          opacity: 0.2;
+          transition: 0.5s;
+          text-align: center;
+        }
+
+        .contenedor .cuadro:hover .cara.frente .contenido {
+          opacity: 1;
+        }
+
+        .contenedor .cuadro .cara.frente .contenido img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .contenedor .cuadro .cara.frente .contenido h1 {
+          font-size: 3em;
+          color: white;
+          display: inline-block;
+        }
+
+        .contenedor .cuadro .cara.frente .contenido h3 {
+          font-size: 3em;
+          color: white;
+          text-align: center;
+        }
+
+        .contenedor .cuadro .cara.frente .contenido a {
+          transition: 0.5s;
+        }
+
+        .contenedor .cuadro .cara.atras {
+          position: relative;
+          background-color: #ffffff;
+          background-image: linear-gradient(160deg, #ffffff 0%, #ffdeff 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+          box-sizing: border-box;
+          box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+          transform: translateY(-100px);
+        }
+
+        .contenedor .cuadro:hover .cara.atras {
+          transform: translateY(0);
+        }
+
+        .contenedor .cuadro .cara.atras .contenido a {
+          color: #fff;
+          border: 1px solid #fff;
+          padding: 10px;
+          margin: 10px 0 0;
+          transition: all 0.3s;
+          cursor: pointer;
+          font-weight: bold;
+          background-color: #333;
+          border-radius: 6px;
+          position: relative;
+          padding-right: 10px;
+          margin-top: 10px;
+        }
+
+        .contenedor .cuadro .cara.atras .contenido button:hover {
+          letter-spacing: 20px;
+        }
+        /* fin de estilos CSS para seccion equipo*/
+
+        /*estilo CSS inicio de la página*/
+        .grid-container {
+          display: grid;
+          grid-template-columns: 70% 30%;
+        }
+    </style>
+</head>
+<body>
+     <button id="toggleAside" class="circular-button">💬</button>
+    <header>
+        <img src="Images/logoLejanias.png" width="100%" height="70%">
+    </header>
+    <nav>
+        <a href="#sobre-la-web">Sobre la web</a>
+        <a href="#objetivos-recompensas">Objetivos y recompensas</a>
+        <a href="#participacion-recompensas">Participación y recompensas</a>
+        <a href="#preguntas-frecuentes">Preguntas frecuentes</a>
+        <a href="#comentarios">Comentarios</a>
+        <a href="#equipo">Equipo</a>
+    </nav>
+    <section id="sobre-la-web">
+        <div class="grid-container">
+            <div>
+                <img src="Images/imagenPrincipal.jpg" width="100%" height="70%">
+            </div>
+            <div>
+                <h2>El viaje comienza con un simple billete perdido.
+                </h2>
+            </div>
+        </div>
+        <div>
+            <h2>ATENCIÓN: Esta página simula la campaña de microfinanciación de un videojuego ficticio 
+            y no representa un producto real. Práctica de Multimedia, 1º GDDV - Curso 23/24
+            (Móstoles), URJC. La URJC no se hace responsable del contenido expuesto por el autor.</h2>
+        </div>
+    </section>
+     <section id="objetivos-recompensas">
+        <h2>Objetivos y Recompensas</h2>
+        <div class="meta">
+            <h3>Meta 1: Descripción de la meta 1 y las recompensas asociadas.</h3>
+            <div class="monto">$1000</div>
+        </div>
+        <div class="meta">
+            <h3>Meta 2: Descripción de la meta 2 y las recompensas asociadas.</h3>
+            <div class="monto">$2000</div>
+        </div>
+        <div class="meta">
+            <h3>Meta 3: Descripción de la meta 3 y las recompensas asociadas.</h3>
+            <div class="monto">$3000</div>
+        </div>
+        <div class="meta">
+            <h3>Meta 4: Descripción de la meta 4 y las recompensas asociadas.</h3>
+            <div class="monto">$4000</div>
+        </div>
+    </section>
+    <section id="participacion-recompensas">
+        <div class="meta">
+            <h2>Participación y Recompensas</h2>
+            <div class="container">
+                <div class="objective" onclick="toggleObjective(1)">
+                    <strong>Objetivo y Recompensa 1:</strong> Haz clic para ver más detalles
+                    <div class="objective-content" id="objective1">
+                        <p>Detalles del Objetivo y Recompensa 1:  Lo agregaré en un futuro.</p>
+                        <img src="imagen1.jpg" alt="Imagen 1">
+                    </div>
+                </div>
+                <div class="objective" onclick="toggleObjective(2)">
+                    <strong>Objetivo y Recompensa 2:</strong> Haz clic para ver más detalles
+                    <div class="objective-content" id="objective2">
+                        <p>Detalles del Objetivo y Recompensa 2:  Lo agregaré en un futuro.</p>
+                        <img src="imagen2.jpg" alt="Imagen 2">
+                    </div>
+                </div>
+                <div class="objective" onclick="toggleObjective(3)">
+                    <strong>Objetivo y Recompensa 3:</strong> Haz clic para ver más detalles
+                    <div class="objective-content" id="objective3">
+                        <p>Detalles del Objetivo y Recompensa 3: Lo agregaré en un futuro.</p>
+                        <img src="imagen3.jpg" alt="Imagen 3">
+                    </div>
+                </div>
+                <!-- EL APARTADO DE CONTRIBUCIÓN PERSONALIZADA (WORK IN PROGRESS) -->
+                <div class="custom-form" id="customForm">
+                    <label for="precio">Contribución Personalizada (En Euros):</label>
+                    <input type="number" id="precio" name="precio" min="0" step="any" required>
+                    <label for="justificacion">Notas de la contribución:</label>
+                    <textarea id="justificacion" name="justificacion" rows="4" required></textarea>
+                    <button type="submit">Pagar y enviar</button>
+                </div>
+                <div onclick="toggleCustomForm()" style="text-align: center; cursor: pointer; color: black; font-weight: bold;">Contribuir con una cantidad personalizada</div>
+            </div>
+        </div>
+    </section>
+    <section id="preguntas-frecuentes">
+        <h2>Preguntas Frecuentes</h2>
+        <div class="faq">
+            <h3>¿Cuáles son los requisitos mínimos para poder jugar al juego en PC?</h3>
+            <p>Los requisitos mínimos para jugar al juego en PC son similares a los de League of Legends. Necesitas:</p>
+            <ul>
+                <li>Sistema operativo: Windows 7, 8.1, o 10, de 64 bits</li>
+                <li>Procesador: 3 GHz procesador</li>
+                <li>Memoria: 2 GB de RAM (4 GB de RAM para Windows Vista y superior)</li>
+                <li>Gráficos: Tarjeta gráfica compatible con DirectX 9.0c con 512MB de VRAM</li>
+                <li>Espacio en disco: 16 GB</li>
+            </ul>
+        </div>
+        <div class="faq">
+            <h3>¿Qué idiomas están disponibles?</h3>
+            <p>El juego está disponible en varios idiomas, incluyendo Español e Inglés.</p>
+        </div>
+        <div class="faq">
+            <h3>¿En qué plataformas se podrá jugar?</h3>
+            <p>El juego estará disponible para PC y Nintendo Switch.</p>
+        </div>
+        <div class="faq">
+            <h3>¿El juego tiene soporte para controladores?</h3>
+            <p>Sí, el juego ofrece soporte completo para controladores en todas las plataformas, incluyendo PC y Nintendo Switch. Los jugadores pueden optar por utilizar un controlador para una experiencia más cómoda y adaptada a sus preferencias de juego.</p>
+        </div>
+        <div class="faq">
+            <h3>¿Existen opciones de personalización dentro del juego?</h3>
+            <p>El juego permite una amplia variedad de personalizaciones, incluyendo la modificación de personajes, la selección de equipamiento y la personalización de interfaces de usuario para adaptarse a diferentes estilos de juego y preferencias personales.</p>
+        </div>
+        <div class="faq">
+            <h3>¿Cómo se manejan las actualizaciones del juego?</h3>
+            <p>Las actualizaciones del juego se lanzan regularmente para mejorar la experiencia de juego, corregir errores y añadir contenido nuevo. Los jugadores recibirán notificaciones dentro del juego y podrán descargar las actualizaciones automáticamente o manualmente, según prefieran.</p>
+        </div>
+        <div class="faq">
+            <h3>¿Hay características de accesibilidad disponibles?</h3>
+            <p>Nos comprometemos con la accesibilidad para todos los jugadores. El juego incluye opciones de texto de alto contraste, subtítulos para todos los diálogos, descripciones de audio para eventos visuales importantes, y configuraciones personalizables para controles. Estamos constantemente evaluando nuestra comunidad para integrar más características de accesibilidad en futuras actualizaciones.</p>
+        </div>
+   <!--
+<section id="comentarios"> 
+    <h2>Comentarios</h2>
+    <p>Aquí se encuentran los comentarios...</p>
+</section>
+-->
+
+    <section id="equipo">
+        <h2>Equipo</h2>
+        <div class="contenedor">
+          <div class="cuadro">
+            <div class="cara frente">
+              <div class="contenido">
+                <img src="Images/carla.jpg" alt="Foto de perfil de Carla">
+              </div>
+            </div>
+            <div class="cara atras">
+              <div class="contenido">
+                <h2>CARLA</h2>
+                <p>
+                  Soy una chica a la que le encantan los deportes, el anime y todo lo que tenga que ver con los videojuegos.<br>
+                  Soy jugadora de segunda división en fútbol sala femenino en el equipo de Alcorcón y actualmente estoy cursando el grado de diseño y desarrollo de videojuegos en la URJC.<br>
+                  Siempre estoy dispuesta a que me invites a un café.
+                </p>
+                <a href="https://www.instagram.com/_carlaaa05_/" target="_blank">RR.SS</a>
+              </div>
+            </div>
+          </div>
+          <div class="cuadro">
+            <div class="cara frente">
+              <div class="contenido">
+                <img src="Images/hugo.jpg" alt="Foto de perfil de Hugo">
+              </div>
+            </div>
+            <div class="cara atras">
+              <div class="contenido">
+                <h2>HUGO</h2>
+                <p>
+                  Lo mío son los videojuegos y todo lo que tenga que ver con ellos aunque la música toma parte de mi corazoncito<br>
+                  Actualmente formando una banda como guitarrista (poquito a poco) y cursando doble grado de Videojuegos e ingeniería de computadores en la URJC.
+                </p>
+                <a href="https://www.instagram.com/huuu_gooos?igsh=ZjZrZHJ6a29lbzM0&utm_source=qr">RR.SS</a>
+              </div>
+            </div>
+          </div>
+          <div class="cuadro">
+            <div class="cara frente">
+              <div class="contenido">
+                <img src="Images/jorge.jpg" alt="Foto de perfil de Jorge">
+              </div>
+            </div>
+            <div class="cara atras">
+              <div class="contenido">
+                <h2>JORGE</h2>
+                <p>
+                  Soy un chico al que le gusta tanto el anime como los videojuegos.<br>
+                  Ex-jugador profesional de E-Sports, ahora estudio una ingeniería de diseño y desarrollo de videojuegos en la URJC.
+                </p>
+                <a href="https://www.instagram.com/_justjorg3_/">RR.SS</a>
+              </div>
+            </div>
+          </div>
+          <div class="cuadro">
+            <div class="cara frente">
+              <div class="contenido">
+                <img src="Images/lucas.jpg" alt="Foto de perfil de Lucas">
+              </div>
+            </div>
+            <div class="cara atras">
+              <div class="contenido">
+                <h2>LUCAS</h2>
+                <p>
+                  Fan de los RPG por turnos buscando a alguien con quien jugar a las cartas<br>
+                  Dormilón a tiempo completo y estudiante de la URJC en los tiempos libres.
+                </p>
+                <a href="https://x.com/Gumi62?t=NJk8EtiByPLgRah4xevTeQ&s=09" target="_blank">RR.SS</a>
+              </div>
+            </div>
+          </div>
+          <div class="cuadro">
+            <div class="cara frente">
+              <div class="contenido">
+                <img src="Images/oscar.jpg" alt="Foto de perfil de Óscar">
+              </div>
+            </div>
+            <div class="cara atras">
+              <div class="contenido">
+                <h2>ÓSCAR</h2>
+                <p>
+                  Soy un amante de los videojuegos y del deporte en general<br>
+                  Cursando actualmente diseño y desarrollo de videojuegos en la Universidad Rey Juan Carlos a la par que juego de manera aficionada al fútbol.
+                </p>
+                <a href="https://www.instagram.com/oscarpinadero099/" target="_blank">RR.SS</a>
+              </div>
+            </div>
+          </div>
+          <div class="cuadro">
+            <div class="cara frente">
+              <div class="contenido">
+                <img src="Images/ruben.jpg" alt="Foto de perfil de Rubén">
+              </div>
+            </div>
+            <div class="cara atras">
+              <div class="contenido">
+                <h2>RUBÉN</h2>
+                <p>
+                  Taekwondista de nacimiento y apasionado del pixelart.<br>
+                  Físicamente estudiando Videojuegos en la URJC, mentalmente en casa mirando fijamente a mi gata.
+                </p>
+                <a href="https://www.instagram.com/sriven_55/"_blank">RR.SS</a>
+              </div>
+            </div>
+          </div>
+        </div>   
+    </section>
+    <footer>
+        <p>Derechos de autor &copy; 2024 Mi Página Web</p>
+    </footer>
+    
+    <!-- Aside que se abrirá al hacer clic en el botón -->
+<aside id="comentariosAside" class="aside-slider">
+    <button id="closeAside" class="circular-button">✖</button>
+    <h2>Comentarios</h2>
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+        /*
+        var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        */
+        (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://multimediaurjc.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+    <!-- Botón para cerrar el aside -->
+    
+</aside>
+
+
+        <script>
+        // Función para abrir automáticamente el aside después de tres segundos
+        window.onload = function() {
+            setTimeout(function() {
+                var asideElement = document.getElementById("comentariosAside");
+                asideElement.style.opacity = "1";
+            }, 3000); // Tres segundos
+        };
+
+        // Función para mostrar el formulario al hacer clic en el botón "Únete a la conversación"
+        document.getElementById("joinConversation").addEventListener("click", function() {
+            var form = document.getElementById("commentForm");
+            form.classList.toggle("active");
+        });
+    </script>
+    <script>
+    // Función para abrir automáticamente el aside después de tres segundos
+    window.onload = function() {
+        
+    };
+
+    // Función para abrir el aside al hacer clic en el botón
+    document.getElementById("toggleAside").addEventListener("click", function() {
+        var asideElement = document.getElementById("comentariosAside");
+        asideElement.style.opacity = "1";
+    });
+
+    // Función para cerrar el aside al hacer clic en el botón de cerrar
+    document.getElementById("closeAside").addEventListener("click", function() {
+        var asideElement = document.getElementById("comentariosAside");
+        asideElement.style.opacity = "0";
+    });
+</script>
+    <script>
+        function toggleObjective(objectiveNumber) {
+            var objectiveContent = document.getElementById('objective' + objectiveNumber);
+            if (objectiveContent.classList.contains('active')) {
+                objectiveContent.classList.remove('active');
+                objectiveContent.style.maxHeight = null;
+                objectiveContent.style.opacity = 0;
+            } else {
+                // Cerrar todos los objetivos antes de abrir el seleccionado
+                var allObjectives = document.querySelectorAll('.objective-content');
+                allObjectives.forEach(function(item) {
+                    item.classList.remove('active');
+                    item.style.maxHeight = null;
+                    item.style.opacity = 0;
+                });
+                objectiveContent.classList.add('active');
+                objectiveContent.style.maxHeight = objectiveContent.scrollHeight + "px";
+                objectiveContent.style.opacity = 1;
+            }
+            
+            // Cerrar el formulario personalizado si está abierto
+            var customForm = document.getElementById('customForm');
+            customForm.classList.remove('active-form');
+            customForm.style.maxHeight = null;
+            customForm.style.opacity = 0;
+        }
+
+        function toggleCustomForm() {
+            var customForm = document.getElementById('customForm');
+            if (customForm.classList.contains('active-form')) {
+                customForm.classList.remove('active-form');
+                customForm.style.maxHeight = null;
+                customForm.style.opacity = 0;
+            } else {
+                customForm.classList.add('active-form');
+                customForm.style.maxHeight = customForm.scrollHeight + "px";
+                customForm.style.opacity = 1;
+                
+                // Cerrar los objetivos abiertos si el formulario se abre
+                var allObjectives = document.querySelectorAll('.objective-content');
+                allObjectives.forEach(function(item) {
+                    item.classList.remove('active');
+                    item.style.maxHeight = null;
+                    item.style.opacity = 0;
+                });
+            }
+        }
+    </script>
+    <script>
+        // Obtener referencias a los elementos
+const toggleAsideButton = document.getElementById('toggleAside');
+const comentariosAside = document.getElementById('comentariosAside');
+const closeAsideButton = document.getElementById('closeAside');
+
+// Función para ajustar la posición del botón de abrir el aside
+function ajustarPosicionBoton() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const buttonSize = 50; // Tamaño del botón
+    const offset = 20; // Espacio de separación desde el borde
+
+    // Calcular la posición del botón
+    const top = windowHeight / 2 - buttonSize / 2;
+    const left = windowWidth - buttonSize - offset;
+
+    // Aplicar la posición al botón
+    toggleAsideButton.style.top = top + 'px';
+    toggleAsideButton.style.left = left + 'px';
+}
+
+// Función para abrir el aside
+function abrirAside() {
+    comentariosAside.style.display = 'block';
+    toggleAsideButton.style.display = 'none';
+}
+
+// Función para cerrar el aside
+function cerrarAside() {
+    comentariosAside.style.display = 'none';
+    toggleAsideButton.style.display = 'block';
+}
+
+// Event listeners
+toggleAsideButton.addEventListener('click', abrirAside);
+closeAsideButton.addEventListener('click', cerrarAside);
+
+// Llamar a la función inicialmente y cuando se redimensione la ventana
+ajustarPosicionBoton();
+window.addEventListener('resize', ajustarPosicionBoton);
+</script>
+<script id="dsq-count-scr" src="//multimediaurjc.disqus.com/count.js" async></script>
+</body>
+</html>
